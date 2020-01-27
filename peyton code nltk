@@ -1,0 +1,111 @@
+import requests
+from bs4 import BeautifulSoup
+import nltk
+from nltk.book import * #import example books
+import pandas as pd
+import numpy as np
+
+#examples from books
+text1.concordance("monstrous")
+text2.common_context(["monstrous", "very"])
+text4.dispersion_plot(["happy","sad"])
+
+#split sentences into words 
+words=[word_tokenize(sent) for sent in sents]
+print(words)
+
+#filter out stopwords 
+from nltk.corpus import stopwords
+from string import punctuation
+customStopWords=set(stopwords.words('english')+list(punctuation))
+
+wordsWOStopwords=[word for word in word_tokenize(text) if word not in customStopWords]
+print(wordsWOStopwords)
+
+#reduce all forms of the word to its root 
+from nltk.stem.lancaster import LancasterStemmer
+st=LancasterStemmer()
+stemmedWords=[st.stem(word) for word in word_tokenize(text2)]
+print(stemmedWords)
+
+#auto tag words as nouns, verbs, conjunctions, etc.
+nltk.pos_tag(word_tokenize(text2))
+
+
+#download the page from the website
+def getWashPostText(url,token):
+try:
+page = urllib2.urlopen(url).read().decode('utf8')
+except:
+return(None,None)
+
+#use beautiful soup to parse the webpage
+soup = BeautifulSoup(page)
+if soup is None:
+return(None,None)
+
+#remove the HTML DIVS/TAGS and GET one string of text of the article
+text=""
+if soup.find_all(token) is not None:
+text=''.join(map(lambda p: p.text, soup.find_all(token)))
+soup2 = BeautifulSoup(text)
+if soup2.find_all('p') is not None:
+text = ''.join(map(lambda p: p.text, soup2.find_all('p')))
+
+#return the title and the text of the article 
+return text, soup.title.text
+
+#what steven wrote
+
+### creates an object linked to the given url
+url = 'https://www.energyindepth.org/germanys-energy-transition-makes-room-for-american-lng/'
+
+### retirieves the given object (url) from the web
+r = requests.get(url)
+
+### converts the url html into text
+html_doc = r.text
+
+soup = BeautifulSoup(html_doc, 'html5lib')
+
+soup.prettify()
+
+test_paragraphs = soup.find_all('p')
+
+balling = test_paragraphs[1].get_text()
+
+print(balling)
+
+
+def sometext(page):
+    
+    textlist = ''
+    
+    for s in page:
+        w = s.get_text()
+        textlist += w
+    return textlist
+
+# def mytext(page):
+#     for s in page:
+#         return s.get_text()
+
+testing123 = sometext(test_paragraphs)
+
+print(testing123)
+
+
+nlp = English()
+
+doc = nlp(testing123)
+
+print(doc.text)
+
+
+tokenizer = Tokenizer(nlp.vocab)
+
+tokens = tokenizer(testing123)
+
+print(tokens)
+
+[token.text for token in doc]
