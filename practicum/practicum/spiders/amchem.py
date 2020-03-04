@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import scrapy
-from datetime import datetime
 from ..items import PracticumItem
-urls = 'https://www.ceh.org/latest/blog/'
+from datetime import datetime
+urls = 'https://blog.americanchemistry.com/'
 
 
-class cehSpider(scrapy.Spider):
-    name = 'ceh'
+class amchemSpider(scrapy.Spider):
+    name = 'amchem'
+    page_number = 2
 
     def start_requests(self):
         yield scrapy.Request(url=urls,
@@ -14,14 +16,15 @@ class cehSpider(scrapy.Spider):
 
     # First parsing method
     def parse_front(self, response):
-        next_page = response.xpath('//div/span[@class = "rt-loadmore-text"]').get()
-        article_links = response.xpath('//h3/a/@href')
+        article_links = response.xpath('//h2//a/@href')
         links_to_follow = article_links.extract()
         for link in links_to_follow:
             yield response.follow(url=link,
                                   callback=self.parse_pages)
 
-        if next_page is not None:
+        next_page = 'https://blog.americanchemistry.com/page/' + str(amchemSpider.page_number) + '/'
+        if amchemSpider.page_number <= 175:
+            amchemSpider.page_number += 1
             yield response.follow(next_page, callback=self.parse_front)
 
     def parse_pages(self, response):
@@ -37,9 +40,9 @@ class cehSpider(scrapy.Spider):
         # extracts the region, article_date, and article_title of each blog
         twitter = []
 # response.xpath('//div[(@class="field field-name-field-twitter-id field-type-text field-label-hidden")]/a/@href]')
-        article_date = response.xpath('//span[@class = "published"]//text()').extract()
-        article_title = response.xpath('//h2[@class = "entry-title"]//text()').extract()
-        author = response.xpath('//span[@class = "author vcard"]/a//text()').extract()
+        article_date = response.xpath('//span[@class = "c-post__byline"]//text()').re(r"\w+\s\d{1,2},\s\d{4}")
+        article_title = response.xpath('//h1//text()').extract()
+        author = response.xpath('//a[@rel = "author"]//text()').extract()
         article_text = response.xpath('//p//text()').extract()
         body = ''
         for text in article_text:
@@ -52,7 +55,11 @@ class cehSpider(scrapy.Spider):
             items['author'] = author[0]
         else:
             items['author'] = ''
-        if len(article_date) > 0:
+        # if len(article_date) > 0:
+        #     items['article_date'] = article_date[0]
+        # else:
+        #     items['article_date'] = ''
+        if len(article_title) > 0:
             items['article_title'] = article_title[0]
         else:
             items['article_title'] = ''
@@ -79,3 +86,4 @@ class cehSpider(scrapy.Spider):
         items['timestamp'] = datetime.now()
 
         yield items
+

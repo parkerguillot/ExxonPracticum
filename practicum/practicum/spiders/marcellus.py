@@ -2,11 +2,11 @@
 import scrapy
 from datetime import datetime
 from ..items import PracticumItem
-urls = 'https://www.ceh.org/latest/blog/'
+urls = 'https://marcelluscoalition.org/blog/'
 
 
-class cehSpider(scrapy.Spider):
-    name = 'ceh'
+class marcellusSpider(scrapy.Spider):
+    name = 'marcellus'
 
     def start_requests(self):
         yield scrapy.Request(url=urls,
@@ -14,8 +14,9 @@ class cehSpider(scrapy.Spider):
 
     # First parsing method
     def parse_front(self, response):
-        next_page = response.xpath('//div/span[@class = "rt-loadmore-text"]').get()
-        article_links = response.xpath('//h3/a/@href')
+        next_page = response.xpath('//li[@class = "pagination-next"]/a/@href').get()
+        article_links = response.xpath('//h2[@class = "entry-title"]/a/@href')
+        print(article_links)
         links_to_follow = article_links.extract()
         for link in links_to_follow:
             yield response.follow(url=link,
@@ -37,10 +38,10 @@ class cehSpider(scrapy.Spider):
         # extracts the region, article_date, and article_title of each blog
         twitter = []
 # response.xpath('//div[(@class="field field-name-field-twitter-id field-type-text field-label-hidden")]/a/@href]')
-        article_date = response.xpath('//span[@class = "published"]//text()').extract()
-        article_title = response.xpath('//h2[@class = "entry-title"]//text()').extract()
-        author = response.xpath('//span[@class = "author vcard"]/a//text()').extract()
-        article_text = response.xpath('//p//text()').extract()
+        article_date = response.xpath('//div/span[@class = "date published time"]//text()').extract()
+        article_title = response.xpath('//h1[@class = "entry-title"]//text()').extract()
+        author = ''
+        article_text = response.xpath('//div[@class = "entry-content"]//p//text()').extract()
         body = ''
         for text in article_text:
             body = body + text
