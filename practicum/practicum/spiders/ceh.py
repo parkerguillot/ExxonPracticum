@@ -66,6 +66,8 @@ class BlogSpiderSpider(scrapy.Spider):
         # declares items extracted for each of the following
         items['article_url'] = response.request.url
         items['article_date'] = article_date
+        items['twitter'] = twitter
+        items['article_title'] = article_title
         items['author'] = author
         items['article_text'] = body
         items['timestamp'] = datetime.now()
