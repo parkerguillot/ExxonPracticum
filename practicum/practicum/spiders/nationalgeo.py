@@ -8,7 +8,7 @@ urls = 'http://voices.nationalgeographic.com/'
 
 class BlogSpiderSpider(scrapy.Spider):
     name = 'nationalgeo'
-    page_number=2
+    page_number = 2
 
     # Function to start spider
     def start_requests(self):
@@ -38,9 +38,9 @@ class BlogSpiderSpider(scrapy.Spider):
         # Due to no twitter link on site the twitter extract is empty
         twitter = []
         # extracts the article_date, author, article_text, and article_title of each blog
-        article_date = response.xpath('//time[(@class="entry-date published updated")]//text()').extract()
+        article_date = response.xpath('//span[(@class="blog-meta-item blog-meta-date")]/time//text()').extract()
         article_title = response.xpath('//h3[(@class = "ng-entry-title ng-text-edit-m ng-padding-bottom-medium")]//text()').extract()
-        author = ''
+        author = response.xpath('//div[(@class="entry-contact-name")]//text()').extract()
         article_text = response.xpath('//div[(@class="has-content-area")]//text()').extract()
         # Cleans article_text
         body = ''
@@ -69,10 +69,6 @@ class BlogSpiderSpider(scrapy.Spider):
         body = body.replace('\t', '')
         # declares items extracted for each of the following
         items['article_url'] = response.request.url
-        items['article_date'] = article_date
-        items['twitter'] = twitter
-        items['article_title'] = article_title
-        items['author'] = author
         items['article_text'] = body
         items['timestamp'] = datetime.now()
         yield items
