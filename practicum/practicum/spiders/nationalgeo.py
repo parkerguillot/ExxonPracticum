@@ -16,7 +16,7 @@ class BlogSpiderSpider(scrapy.Spider):
     # through multiple pages
     page_number = 2
 
-    # This first function starts the request y loading the provided url above
+    # This first function starts the request loading the provided url above
     def start_requests(self):
         yield scrapy.Request(url=urls,
                              callback=self.parse_front)
