@@ -2,13 +2,16 @@
 
 # These are the required packages need for this python file to run completely
 import scrapy
-from ..items import PracticumItem
 from datetime import datetime
+
+# References the items file which is where the user specifies the items that need to be scraped
+from ..items import PracticumItem
 
 # We need to define a start url or the website we are interested in scraping
 urls = 'https://directorsblog.nih.gov/page/1/?s'
 
-# Defining the class statement to be exceuted. This contains the whole scraping process
+
+# Defining the class statement to be executed. This contains the whole scraping process
 class NihSpider(scrapy.Spider):
     name = 'nih'
 
@@ -59,7 +62,7 @@ class NihSpider(scrapy.Spider):
         article_text = response.xpath('//div[(@id = "mainContent")]//p//text()').extract()
         twitter = []
 
-        # The article text is sometimes in seperate paragraphs so this "body" function
+        # The article text is sometimes in separate paragraphs so this "body" function
         # will combine the paragraphs into one
         body = ''
         for text in article_text:
