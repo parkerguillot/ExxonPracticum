@@ -23,8 +23,8 @@ class PracticumPipeline(object):
         self.cursor = self.conn.cursor()
 
     # def create_table(self):
-    #     self.cursor.execute("DROP TABLE IF EXISTS blogs")
-    #     self.cursor.execute("create table blogs(article_url text,article_date text,article_title text,"
+    #     self.cursor.execute("DROP TABLE IF EXISTS nih")
+    #     self.cursor.execute("create table nih(article_url text,article_date text,article_title text,"
     #                         "article_text text,author text, twitter text, timestamp datetime)")
     #     # self.cursor.execute("create table blogs("
     #     #                     "link text,"
@@ -40,7 +40,7 @@ class PracticumPipeline(object):
         return item
 
     def store_db(self, item):
-        self.cursor.execute("insert into text values (%s,%s,%s,%s,%s,%s,%s)", (
+        self.cursor.execute("insert into newdata values (%s,%s,%s,%s,%s,%s,%s)", (
             item['article_url'],
             item['article_date'],
             item['article_title'],
@@ -52,13 +52,5 @@ class PracticumPipeline(object):
 
         self.conn.commit()
 
-        # self.cursor.execute("insert into blogs values (%s,%s,%s)", (
-        #     item['link'][0],
-        #     item['region'][0],
-        #     item['author'][0],
-        #     item['article_date'][0],
-        #     item['article_title'][0],
-        #     item['article_text'][0]
-        # ))
 
 

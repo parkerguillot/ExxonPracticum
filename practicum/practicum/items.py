@@ -5,13 +5,15 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
 
+# required package for running this file completely
 import scrapy
 
 
+# This class statement will be called by all spiders that have from "..items import PracticumItem"
+# specified at the top 0f the file.
 class PracticumItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    # link = scrapy.Field()
     article_url = scrapy.Field()
     twitter = scrapy.Field()
     author = scrapy.Field()
@@ -19,5 +21,4 @@ class PracticumItem(scrapy.Item):
     article_date = scrapy.Field()
     article_text = scrapy.Field()
     timestamp = scrapy.Field()
-    # name = scrapy.Field()
     pass
