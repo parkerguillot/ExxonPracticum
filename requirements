@@ -1,4 +1,4 @@
-
+These are a list of required Python packages. These packages are needed in order to run the analysis in its entirety.
 Data Collection:
 Scrapy == 3.8.2
 DateTime ==4.3
